@@ -9,7 +9,8 @@
   },
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "generate": "drizzle-kit generate --config=src/config/drizzle.config.js"
   },
   "type": "module",
   "devDependencies": {
