@@ -7,10 +7,12 @@ import { favoriteTable } from "./db/schema.js"
 const app = express()
 const PORT = ENV.PORT || 8001
 import { and,eq } from "drizzle-orm"
+import job from "./config/cron.js"
+
 app.use(express.json())
 app.use(cors())
 
-
+if(ENV.NODE_ENV == "production") job.start()
 
 app.get("/api/health",(req,res)=>{
     res.status(200).json({
