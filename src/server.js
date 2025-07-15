@@ -48,12 +48,26 @@ app.post("/api/favorites", async (req,res)=> {
     }
 })
 
+app.get("/api/favorites/:userId",async(req,res)=>{
+    try {
+        const {userId} =  req.params;
+
+        const userFavorites = await db.select().from(favoriteTable).where(
+            eq(favoriteTable.userId,userId)
+        )
+
+        res.status(200).json(userFavorites)
+    } catch (error) {
+        console.log("error fetching the favorites",error)
+    }
+})
+
 app.delete("/api/favorites/:userId/:recipeId", async (req,res)=>{
     try{
        const {userId,recipeId} =  req.params
 
        await db.delete(favoriteTable).where(
-        and(eq(favoriteTable.userId,userId), eq(favoriteTable.recipeId,recipeId))
+        and(eq(favoriteTable.userId,userId), eq(favoriteTable.recipeId,parseInt(recipeId)))
        )
        res.status(200).json({
         message : "Successful Deletion"
