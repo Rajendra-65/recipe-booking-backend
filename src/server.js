@@ -6,7 +6,7 @@ import cors from "cors"
 import { favoriteTable } from "./db/schema.js"
 const app = express()
 const PORT = ENV.PORT || 8001
-
+import { and,eq } from "drizzle-orm"
 app.use(express.json())
 app.use(cors())
 
@@ -42,6 +42,24 @@ app.post("/api/favorites", async (req,res)=> {
         res.status(201).json(newFav[0])
     }catch(e){
         console.log("error in adding favorite",e);
+        res.status(500).json({
+            error: "something went wrong"
+        })
+    }
+})
+
+app.delete("/api/favorites/:userId/:recipeId", async (req,res)=>{
+    try{
+       const {userId,recipeId} =  req.params
+
+       await db.delete(favoriteTable).where(
+        and(eq(favoriteTable.userId,userId), eq(favoriteTable.recipeId,recipeId))
+       )
+       res.status(200).json({
+        message : "Successful Deletion"
+       })
+    }catch(e){
+        console.log("Error removing a favorite",e)
         res.status(500).json({
             error: "something went wrong"
         })
